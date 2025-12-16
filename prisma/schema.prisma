@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Record {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  total      Int      // 累計回転数
+  diff       Int      // 今回の回転数（差分）
+  playId     String
+  play       Play     @relation(fields: [playId], references: [id], onDelete: Cascade)     // 遊戯開始回転数（最初のみ）
+}
+
+model Machine {
+  id         String   @id @default(uuid())
+  name       String
+  plays      Play[]
+}
+
+model Play {
+  id         String   @id @default(cuid())
+  createdDate DateTime   @default(now())
+  playDate   DateTime?
+  startCount Int?
+  average    Float?
+  userId     String
+  machineId  String?
+  machine    Machine? @relation(fields: [machineId], references: [id])
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  records    Record[]
+}
+
+model User {
+  id         String   @id
+  createdDate DateTime @default(now())
+  email       String?
+  plays      Play[]
+}
