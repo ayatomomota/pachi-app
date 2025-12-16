@@ -3,6 +3,12 @@ import { prisma } from "@/lib/prisma";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const playId = searchParams.get("playId");
+
+  // playIdがない場合は400エラーを返す
+  if (!playId) {
+    return new Response("playIdは必須です。", { status: 400 });
+  }
+
   const records = await prisma.record.findMany({
     where: { playId },
     orderBy: { id: "asc" },
