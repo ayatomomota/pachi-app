@@ -69,7 +69,7 @@ export default function PlayListPage() {
         <form action={() => createPlay(user?.id || "")}>
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 shadow"
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 shadow active:bg-blue-800 active:scale-99 transition"
           >
             追加
           </button>
@@ -95,7 +95,7 @@ export default function PlayListPage() {
               <div>
                 <button
                   onClick={() => handleDelete(play.id)}
-                  className="px-2 bg-red-400 text-white rounded hover:bg-red-500"
+                  className="px-2 bg-red-500 text-white rounded hover:bg-red-600 active:bg-red-700 active:scale-95 transition"
                 >
                   削除
                 </button>

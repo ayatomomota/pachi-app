@@ -2,6 +2,7 @@
 
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type PropsType = {
@@ -9,6 +10,7 @@ type PropsType = {
 };
 
 export default function UserMenu({ user }: PropsType) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const logout = async () => {
@@ -18,7 +20,7 @@ export default function UserMenu({ user }: PropsType) {
 
     if (res.ok) {
       // ログアウト後の遷移
-      window.location.href = "/auth/login";
+      router.replace("/auth/login");
     }
   };
 
@@ -36,14 +38,12 @@ export default function UserMenu({ user }: PropsType) {
       {/* ドロップダウンメニュー */}
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg">
-          <div className="px-4 py-3 border-b text-sm">{user.email}</div>
           <Link
             href="/mypage"
-            className="block px-4 py-e hover:bg-gray-100 text-sm"
+            className="px-4 py-3 border-b text-sm hover:bg-gray-100 block"
           >
-            マイページ
+            {user.email}
           </Link>
-
           <form action={logout} method="post">
             <button
               type="submit"

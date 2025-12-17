@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Record, Play } from "@/types";
 import Loading from "@/app/play/[id]/loading";
 import { updatePlayField } from "./rotationActions";
+import RotationLabel from "./rotation/RotationLabel";
 
 type Props = {
   playId: string;
@@ -130,31 +131,29 @@ export default function RotationTable({ playId }: Props) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* 入力カード */}
-      <div className="bg-white shadow-md rounded-xl p-6 space-y-4">
+      <div className="bg-white shadow-md rounded-xl p-4 space-y-3">
         {/* エラーメッセージ */}
-        {error && <p className="text-red-400 font-semibold">{error}</p>}
+        {error && <p className="text-red-400 font-semibold text-sm">{error}</p>}
         {/* 平均回転数 */}
-        <div className="bg-gray-50 p-3 rounded-lg border">
-          <span className="text-lg font-semibold">平均回転数：</span>
-          <span className="text-blue-700 text-xl font-bold">{average}</span>回
+        <div className="bg-gray-50 p-2 rounded-lg border text-sm">
+          <span className="font-semibold">平均回転数：</span>
+          <span className="text-blue-700 font-bold">{average}</span>回
         </div>
         {/* 遊戯開始回転数*/}
-        <div>
-          <label className="font-semibold block mb-1">遊戯開始回転数</label>
+        <RotationLabel label="遊戯開始回転数">
           <input
             type="number"
             value={startCount ?? ""}
             onChange={(e) => setStartCount(Number(e.target.value))}
-            className="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-blue-400 text-black"
+            className="border border-gray-300 px-2 py-1 rounded-lg focus:outline-none focus:ring-blue-400 text-black text-sm w-full"
             placeholder="例：100"
           />
-        </div>
+        </RotationLabel>
         {/* 累計回転数 */}
-        <div>
-          <label className="font-semibold block mb-1">累計回転数</label>
-          <div className="flex gap-2 mb-4">
+        <RotationLabel label="累計回転数">
+          <div className="flex gap-2">
             <input
               type="number"
               value={inputTotal}
@@ -163,45 +162,55 @@ export default function RotationTable({ playId }: Props) {
                   e.target.value === "" ? "" : Number(e.target.value)
                 )
               }
-              className="border border-gray-300 p-2 rounded-lg"
+              className="border border-gray-300 px-2 py-1 rounded-lg text-sm w-full"
               placeholder="累計回転数を入力"
             />
             <button
               onClick={handleAdd}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+              className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm active:bg-blue-700 active:scale-99 transition whitespace-nowrap"
             >
               追加
             </button>
           </div>
-        </div>
+        </RotationLabel>
       </div>
 
       {/* テーブルカード */}
-      <div className="bg-white shadow-md rounded-xl p-6 overflow-x-auto">
+      <div className="bg-white shadow-md rounded-xl p-4 overflow-x-auto">
         {records ? (
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-100 text-left">
-                <th className="border-b p-3 font-semibold text-center">No</th>
-                <th className="border-b p-3 font-semibold text-center">
+                <th className="border-b p-2 font-semibold text-center text-sm">
+                  No
+                </th>
+                <th className="border-b p-2 font-semibold text-center text-sm">
                   累計回転数
                 </th>
-                <th className="border-b p-3 font-semibold text-center">
+                <th className="border-b p-2 font-semibold text-center text-sm">
                   回転数
                 </th>
-                <th className="border-b p-3 font-semibold text-center">削除</th>
+                <th className="border-b p-2 font-semibold text-center text-sm">
+                  削除
+                </th>
               </tr>
             </thead>
             <tbody>
               {records.map((record, index) => (
                 <tr key={record.id} className="hover:bg-blue-50 transition">
-                  <td className="border-b p-3 text-center">{index + 1}</td>
-                  <td className="border-b p-3 text-right">{record.total}</td>
-                  <td className="border-b p-3 text-right">{record.diff}</td>
-                  <td className="border-b p-3 text-right">
+                  <td className="border-b p-2 text-center text-sm">
+                    {index + 1}
+                  </td>
+                  <td className="border-b p-2 text-right text-sm">
+                    {record.total}
+                  </td>
+                  <td className="border-b p-2 text-right text-sm">
+                    {record.diff}
+                  </td>
+                  <td className="border-b p-2 text-right text-sm">
                     <button
                       onClick={() => handleDelete(record.id)}
-                      className="text-white bg-red-500 rounded px-2 py-1 hover:bg-red-600"
+                      className="text-white bg-red-500 rounded px-2 py-1 hover:bg-red-600 text-sm"
                     >
                       削除
                     </button>
@@ -215,7 +224,9 @@ export default function RotationTable({ playId }: Props) {
         )}
 
         {records.length === 0 && (
-          <p className="text-gray-500 text-center mt-4">記録がありません</p>
+          <p className="text-gray-500 text-center mt-2 text-sm">
+            記録がありません
+          </p>
         )}
       </div>
     </div>

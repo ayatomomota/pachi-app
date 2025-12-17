@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Machine, Play } from "@/types";
 import { updatePlayField } from "./rotationActions";
+import RotationLabel from "./rotation/RotationLabel";
 
 type Props = {
   playId: string;
@@ -10,7 +11,7 @@ type Props = {
 // 遊戯情報（遊戯台、日付など）を表示するコンポーネント
 export default function RotationInfo({ playId }: Props) {
   const [machines, setMachines] = useState<Machine[]>([]);
-  const [startDate, setStartDate] = useState<string>("");
+  const [userEnteredDate, setUserEnteredDate] = useState<string | null>(null);
   const [machineId, setMachineId] = useState<string>("");
   const [play, setPlay] = useState<Play | null>(null);
 
@@ -44,33 +45,47 @@ export default function RotationInfo({ playId }: Props) {
     fetchMachines();
   }, []);
 
-  useEffect(() => {
-    updatePlayField(playId, { machineId: machineId });
-  }, [machineId]);
+  // --- stateの派生ロジック ---
+  const initialDate = play?.playDate
+    ? new Date(play.playDate).toISOString().split("T")[0]
+    : "";
+
+  const displayDate = userEnteredDate !== null ? userEnteredDate : initialDate;
+  // ---
 
   useEffect(() => {
-    const convertedDate = new Date(startDate);
-    updatePlayField(playId, { playDate: convertedDate });
-  }, [startDate]);
+    // machineIdが空でない場合のみDBを更新
+    if (machineId) {
+      updatePlayField(playId, { machineId: machineId });
+    }
+  }, [machineId, playId]);
+
+  useEffect(() => {
+    // displayDateが空でない、かつDBのplayDateと異なる場合のみ更新
+    if (displayDate !== initialDate) {
+      const convertedDate = new Date(displayDate);
+      updatePlayField(playId, { playDate: convertedDate });
+    }
+  }, [displayDate, initialDate, playId]);
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 space-y-4">
+    <div className="bg-white shadow-md rounded-xl p-4 space-y-3">
       {/* 情報 */}
-      <div className="flex">
-        <label className="font-semibold block my-1 pr-4">日付</label>
+      <RotationLabel label="日付">
         <input
           type="date"
-          className="border border-gray-300 rounded-md p-2"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
+          className={`w-full rounded-lg border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm hover:border-blue-400 transition-all duration-200 ${
+            displayDate ? "text-gray-700" : "text-gray-400"
+          }`}
+          value={displayDate}
+          onChange={(e) => setUserEnteredDate(e.target.value)}
         />
-      </div>
-      <div className="flex">
-        <label className="font-semibold block my-1 pr-4">遊戯台</label>
+      </RotationLabel>
+      <RotationLabel label="遊戯台">
         <select
-          value={play?.machineId}
+          value={play?.machineId ?? ""}
           onChange={(e) => setMachineId(e.target.value)}
-          className="border border-gray-300 rounded-md p-2"
+          className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm hover:border-blue-400 transition-all duration-200"
         >
           <option key="0" value="0">
             ---
@@ -81,7 +96,7 @@ export default function RotationInfo({ playId }: Props) {
             </option>
           ))}
         </select>
-      </div>
+      </RotationLabel>
     </div>
   );
 }
