@@ -23,7 +23,6 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await req.json();
-    console.log(body);
     const updated = await prisma.play.update({
       where: { id },
       data: body,

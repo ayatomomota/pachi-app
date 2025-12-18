@@ -30,6 +30,13 @@ export default function RotationInfo({ playId }: Props) {
     fetchPlayInfo();
   }, [playId]);
 
+  // play stateが更新されたら、machineIdを初期化
+  useEffect(() => {
+    if (play?.machineId) {
+      setMachineId(play.machineId);
+    }
+  }, [play]);
+
   // 初回レンダリング時に遊戯台一覧を取得
   useEffect(() => {
     // ここでDB/APIから遊戯台の一覧を取得
@@ -54,15 +61,15 @@ export default function RotationInfo({ playId }: Props) {
   // ---
 
   useEffect(() => {
-    // machineIdが空でない場合のみDBを更新
-    if (machineId) {
+    // machineIdが空でない、かつDBのmachineIdと異なる場合のみDBを更新
+    if (machineId && play?.machineId !== machineId) {
       updatePlayField(playId, { machineId: machineId });
     }
-  }, [machineId, playId]);
+  }, [machineId, playId, play?.machineId]);
 
   useEffect(() => {
     // displayDateが空でない、かつDBのplayDateと異なる場合のみ更新
-    if (displayDate !== initialDate) {
+    if (displayDate && displayDate !== initialDate) {
       const convertedDate = new Date(displayDate);
       updatePlayField(playId, { playDate: convertedDate });
     }
@@ -72,18 +79,20 @@ export default function RotationInfo({ playId }: Props) {
     <div className="bg-white shadow-md rounded-xl p-4 space-y-3">
       {/* 情報 */}
       <RotationLabel label="日付">
-        <input
-          type="date"
-          className={`w-full rounded-lg border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm hover:border-blue-400 transition-all duration-200 ${
-            displayDate ? "text-gray-700" : "text-gray-400"
-          }`}
-          value={displayDate}
-          onChange={(e) => setUserEnteredDate(e.target.value)}
-        />
+        <div className="w-fit"> {/* このdivを追加して幅を制御 */}
+          <input
+            type="date"
+            className={`rounded-lg border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm hover:border-blue-400 transition-all duration-200 ${
+              displayDate ? "text-gray-700" : "text-gray-400"
+            }`}
+            value={displayDate}
+            onChange={(e) => setUserEnteredDate(e.target.value)}
+          />
+        </div>
       </RotationLabel>
       <RotationLabel label="遊戯台">
         <select
-          value={play?.machineId ?? ""}
+          value={machineId ?? ""}
           onChange={(e) => setMachineId(e.target.value)}
           className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm hover:border-blue-400 transition-all duration-200"
         >
