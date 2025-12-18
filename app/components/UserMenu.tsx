@@ -3,55 +3,87 @@
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { FiLogOut, FiUser } from "react-icons/fi"; // react-iconsからアイコンをインポート
 
-type PropsType = {
-  user: User;
-};
-
-export default function UserMenu({ user }: PropsType) {
+export default function UserMenu({ user }: { user: User }) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // メニューの外側をクリックしたときにメニューを閉じる
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Escapeキーでメニューを閉じる
+  useEffect(() => {
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeydown);
+    return () => {
+      document.removeEventListener("keydown", handleKeydown);
+    };
+  }, []);
 
   const logout = async () => {
-    const res = await fetch("/api/auth/logout", {
-      method: "POST",
-    });
-
-    if (res.ok) {
-      // ログアウト後の遷移
-      router.replace("/auth/login");
-    }
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.replace("/auth/login");
+    setIsOpen(false);
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={menuRef}>
       {/* ユーザーアイコン */}
       <button
-        onClick={() => setOpen((prev) => !prev)}
-        className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center hover:bg-gray-600"
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg hover:opacity-90 transition-opacity"
       >
-        {/* 仮アイコン */}
-        <span>{user.email?.[0]?.toUpperCase()}</span>
+        {user.email?.[0]?.toUpperCase()}
       </button>
 
       {/* ドロップダウンメニュー */}
-      {open && (
-        <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-lg shadow-lg">
-          <Link
-            href="/mypage"
-            className="px-4 py-3 border-b text-sm hover:bg-gray-100 block"
-          >
-            {user.email}
-          </Link>
-          <form action={logout} method="post">
-            <button
-              type="submit"
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-red-600"
+      {isOpen && (
+        <div
+          className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-2xl z-10 origin-top-right transition-all duration-200 ease-out"
+          style={{
+            transform: isOpen ? "scale(1)" : "scale(0.95)",
+            opacity: isOpen ? 1 : 0,
+          }}
+        >
+          <div className="py-2">
+            <div className="px-4 py-2 border-b border-gray-200">
+              <p className="text-sm font-medium text-gray-900 truncate">
+                {user.email}
+              </p>
+            </div>
+            <Link
+              href="/mypage"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
             >
-              ログアウト
+              <FiUser className="w-5 h-5 text-gray-400" />
+              <span>マイページ</span>
+            </Link>
+            <button
+              onClick={logout}
+              className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-gray-100 transition-colors"
+            >
+              <FiLogOut className="w-5 h-5" />
+              <span>ログアウト</span>
             </button>
-          </form>
+          </div>
         </div>
       )}
     </div>
