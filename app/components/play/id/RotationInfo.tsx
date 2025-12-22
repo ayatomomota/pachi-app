@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Machine, Play } from "@/types";
 import { updatePlayField } from "./rotationActions";
-import RotationLabel from "./rotation/RotationLabel";
+import RotationLabel from "./RotationLabel";
 
 type Props = {
   playId: string;
@@ -79,7 +79,9 @@ export default function RotationInfo({ playId }: Props) {
     <div className="bg-white shadow-md rounded-xl p-4 space-y-3">
       {/* 情報 */}
       <RotationLabel label="日付">
-        <div className="w-fit"> {/* このdivを追加して幅を制御 */}
+        <div className="w-fit">
+          {" "}
+          {/* このdivを追加して幅を制御 */}
           <input
             type="date"
             className={`rounded-lg border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm hover:border-blue-400 transition-all duration-200 ${

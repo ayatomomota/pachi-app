@@ -1,5 +1,5 @@
-import RotationInfo from "@/app/components/RotationInfo";
-import RotationTable from "@/app/components/RotationTable";
+import RotationInfo from "@/app/components/play/id/RotationInfo";
+import RotationTable from "@/app/components/play/id/RotationTable";
 
 type Props = {
   params: {

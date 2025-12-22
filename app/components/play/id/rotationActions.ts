@@ -1,4 +1,4 @@
-import { Play } from "../../types";
+import { Play } from "@/types";
 
 export const updatePlayField = async (
   playId: string,

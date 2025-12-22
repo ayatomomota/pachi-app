@@ -4,11 +4,10 @@ import PlayListItem from "./PlayListItem";
 
 type Props = {
   plays: Play[];
-  deletingId: string | null;
   handleDelete: (playId: string) => void;
 };
 
-export default function PlayList({ plays, deletingId, handleDelete }: Props) {
+export default function PlayList({ plays, handleDelete }: Props) {
   if (plays.length === 0) {
     return (
       <p className="text-center text-gray-500 mt-4">
@@ -20,12 +19,7 @@ export default function PlayList({ plays, deletingId, handleDelete }: Props) {
   return (
     <ul>
       {plays.map((play) => (
-        <PlayListItem
-          key={play.id}
-          play={play}
-          deletingId={deletingId}
-          handleDelete={handleDelete}
-        />
+        <PlayListItem key={play.id} play={play} handleDelete={handleDelete} />
       ))}
     </ul>
   );

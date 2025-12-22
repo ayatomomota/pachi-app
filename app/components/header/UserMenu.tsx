@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { FiLogOut, FiUser } from "react-icons/fi"; // react-iconsからアイコンをインポート
+import UserMenuLink from "./UserMenuLink";
 
 export default function UserMenu({ user }: { user: User }) {
   const router = useRouter();
@@ -48,7 +49,7 @@ export default function UserMenu({ user }: { user: User }) {
       {/* ユーザーアイコン */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg hover:opacity-90 transition-opacity"
+        className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg hover:opacity-90 transition-opacity"
       >
         {user.email?.[0]?.toUpperCase()}
       </button>
@@ -68,14 +69,12 @@ export default function UserMenu({ user }: { user: User }) {
                 {user.email}
               </p>
             </div>
-            <Link
+            <UserMenuLink
+              text="マイページ"
+              icon={<FiUser className="w-5 h-5 text-gray-400" />}
               href="/mypage"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-            >
-              <FiUser className="w-5 h-5 text-gray-400" />
-              <span>マイページ</span>
-            </Link>
+              setIsOpen={setIsOpen}
+            />
             <button
               onClick={logout}
               className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-gray-100 transition-colors"

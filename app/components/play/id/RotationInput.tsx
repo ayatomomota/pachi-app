@@ -1,5 +1,5 @@
 "use client";
-import RotationLabel from "./rotation/RotationLabel";
+import RotationLabel from "./RotationLabel";
 
 type Props = {
   startCount: number | null;
@@ -34,7 +34,9 @@ export default function RotationInput({
               type="number"
               value={startCount ?? ""}
               onChange={(e) =>
-                setStartCount(e.target.value === "" ? null : Number(e.target.value))
+                setStartCount(
+                  e.target.value === "" ? null : Number(e.target.value)
+                )
               }
               className="border border-gray-300 px-2 py-1 rounded-lg focus:outline-none focus:ring-blue-400 text-black text-base w-full"
               placeholder="例：100"

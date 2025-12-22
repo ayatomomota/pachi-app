@@ -1,8 +1,8 @@
 "use client";
 import { Record } from "@/types";
 import Loading from "@/app/play/[id]/loading";
-import RotationTableHeader from "./rotation/RotationTableHeader";
-import RotationTableCell from "./rotation/RotationTableCell";
+import RotationTableHeader from "./RotationTableHeader";
+import RotationTableCell from "./RotationTableCell";
 
 type Props = {
   isLoadingRecords: boolean;

@@ -1,5 +1,5 @@
 "use client";
-import { useRotationData } from "../hooks/useRotationData";
+import { useRotationData } from "../../../hooks/useRotationData";
 import RotationInput from "./RotationInput";
 import RotationDisplay from "./RotationDisplay";
 

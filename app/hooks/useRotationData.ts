@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Record, Play } from "@/types";
-import { updatePlayField } from "../components/rotationActions";
+import { updatePlayField } from "../components/play/id/rotationActions";
 
 // RotationTableコンポーネントのロジックを管理するカスタムフック
 export const useRotationData = (playId: string) => {
@@ -139,16 +139,16 @@ export const useRotationData = (playId: string) => {
 
   // カスタムフックが提供する値
   return {
-    records,             // 全ての遊技記録
-    play,                // 現在のプレイ情報
-    inputTotal,          // 累計回転数の入力値
-    setInputTotal,       // 累計回転数入力値を設定する関数
-    startCount,          // 遊技開始回転数
-    setStartCount,       // 遊技開始回転数を設定する関数
-    average,             // 平均回転数
-    error,               // エラーメッセージ
-    isLoadingRecords,    // レコードがロード中かどうかの状態
-    handleAdd,           // レコード追加ハンドラ
-    handleDeleteLast,    // 一番下のレコード削除ハンドラ
+    records, // 全ての遊技記録
+    play, // 現在のプレイ情報
+    inputTotal, // 累計回転数の入力値
+    setInputTotal, // 累計回転数入力値を設定する関数
+    startCount, // 遊技開始回転数
+    setStartCount, // 遊技開始回転数を設定する関数
+    average, // 平均回転数
+    error, // エラーメッセージ
+    isLoadingRecords, // レコードがロード中かどうかの状態
+    handleAdd, // レコード追加ハンドラ
+    handleDeleteLast, // 一番下のレコード削除ハンドラ
   };
 };
