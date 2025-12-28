@@ -1,10 +1,9 @@
 "use client";
 
 import { User } from "@supabase/supabase-js";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import { FiLogOut, FiUser } from "react-icons/fi"; // react-iconsからアイコンをインポート
+import { FiLogOut, FiSettings, FiUser } from "react-icons/fi"; // react-iconsからアイコンをインポート
 import UserMenuLink from "./UserMenuLink";
 
 export default function UserMenu({ user }: { user: User }) {
@@ -75,6 +74,15 @@ export default function UserMenu({ user }: { user: User }) {
               href="/mypage"
               setIsOpen={setIsOpen}
             />
+            {/* TODO: 管理者権限を持つユーザーのみに表示するロジックを追加 */}
+            {user.email === "ayato1651@icloud.com" && (
+              <UserMenuLink
+                text="管理者ページ"
+                icon={<FiSettings className="w-5 h-5 text-gray-400" />}
+                href="/admin"
+                setIsOpen={setIsOpen}
+              />
+            )}
             <button
               onClick={logout}
               className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-gray-100 transition-colors"
